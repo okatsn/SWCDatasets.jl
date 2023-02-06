@@ -1,0 +1,21 @@
+# Modified from the [Default TagBot template in PkgTemplates](https://github.com/JuliaCI/PkgTemplates.jl/blob/master/templates/github/workflows/TagBot.yml)
+# Trigger TagBot only if
+name: TagBot
+
+on:
+  repository_dispatch:
+    types: [trigger-tagbot]
+  issue_comment:
+    types:
+      - created
+  workflow_dispatch:
+jobs:
+  TagBot:
+    # if: github.event_name == 'workflow_dispatch' || github.actor == 'JuliaTagBot'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: JuliaRegistries/TagBot@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ssh: ${{ secrets.DOCUMENTER_KEY }}
+          registry: okatsn/OkRegistry
