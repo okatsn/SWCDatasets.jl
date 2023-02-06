@@ -9,4 +9,5 @@ global __datasets = nothing
 using CSV,DataFrames
 include("datasets.jl")
 
+include("datadir.jl")
 end

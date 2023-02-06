@@ -10,11 +10,16 @@
 
 This is a julia package created using `okatsn`'s preference, and this package is expected to be registered to [okatsn/OkRegistry](https://github.com/okatsn/OkRegistry) for CIs to work properly.
 
+## Add/Update data
+- Put csv files under `dir_to_be_converted()`
+- [ ] Run `auto_update("path", "to", "subdir")`; this will 
+    - compress all the files under `dir_to_be_converted()`
+    - move the raw csv files to `dir_raw("path", "to", "subdir")`
+    - move the compressed files to `dir_done("path", "to", "subdir")`
 
-More reading
+
+## More reading
 Pkg's Artifact that manage an external dataset as a package
 - https://pkgdocs.julialang.org/v1/artifacts/
-- a provider for reposit data: https://github.com/sdobber/FA_data
-
 
 This package is create on 2023-02-06.
