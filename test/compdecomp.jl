@@ -1,6 +1,10 @@
 @testset "Compress and Decompress" begin
-    using CodecZlib,CSV,DataFrames
-    srcfile = SWCDatasets.dir_to_be_converted("CombinedARI.csv")
+    using CodecZlib,CSV,DataFrames,RDatasets
+    iris = RDatasets.dataset("datasets", "iris")
+
+    srcfile = SWCDatasets.dir_to_be_converted("iris.csv")
+    CSV.write(srcfile, iris)
+
     original = SWCDatasets.load_original(srcfile)
 
     # Test different methods for `return_compressed`

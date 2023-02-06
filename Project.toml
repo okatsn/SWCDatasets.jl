@@ -1,7 +1,7 @@
 name = "SWCDatasets"
 uuid = "92a3a819-b5fa-4251-b583-c8bfed228d45"
 authors = ["okatsn <okatsn@gmail.com> and contributors"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
@@ -11,13 +11,15 @@ GZip = "92fee26a-97fe-5a0c-ad85-20a5f3185b63"
 
 [compat]
 CSV = "0.10.9"
+CodecZlib = "0.7.1"
 DataFrames = "1.4.4"
+GZip = "0.5.1"
 julia = "1.6"
 
 [extras]
 CompatHelperLocal = "5224ae11-6099-4aaa-941d-3aab004bd678"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-
+RDatasets = "ce6b1742-4840-55fa-b093-852dadbb1d8b"
 [targets]
-test = ["Test", "Documenter", "CompatHelperLocal"]
+test = ["Test", "Documenter", "CompatHelperLocal","RDatasets"]
