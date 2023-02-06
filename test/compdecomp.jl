@@ -31,6 +31,14 @@
     package_name2, dataset_name2 = SWCDatasets.get_package_dataset_name(target_path)
     @test isequal(package_name1,package_name2)
     @test isequal(dataset_name1,dataset_name2)
+
+    @info "`srcfile`: $srcfile"
+    @info "`target_path`: $target_path"
+    @info "Test if the two files exists:"
+    @test isfile(srcfile)
+    @test isfile(target_path)
+
+    # TODO: test if they are removed
 end
 
 
