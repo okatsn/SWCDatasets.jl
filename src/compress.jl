@@ -51,13 +51,19 @@ end
 `compress_save(srcpath, pathconvert::Function)` where `pathconvert` is a function that converts `srcpath` to `target_path`. Noted that file extension ".gz" will be automatically added for `target_path`.
 """
 function compress_save(srcpath, pathconvert::Function)
-    package_name = srcpath |> dirname |> basename
-    dataset_name = srcpath |> basename |> str -> split(str, "."; limit=2) |> first
+    package_name, dataset_name = get_package_dataset_name(srcpath)
     target_path =  pathconvert(package_name, dataset_name)*".gz"
     compress_save(srcpath, target_path)
+    @info "File saved to $target_path"
+    return target_path
+end
+
+function compress_save(srcpath)
+    compress_save(srcpath, SWCDatasets.pathconvert)
 end
 
 # TODO: rename functions
+
 
 
 # function pathconvert(srcpath)

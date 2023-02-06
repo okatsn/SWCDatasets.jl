@@ -36,3 +36,12 @@ end
 function pathconvert(package_name, dataset_name)
     pathconvert(dir_done, package_name, dataset_name)
 end
+
+"""
+TODO: Please test me.
+"""
+function get_package_dataset_name(srcpath)
+    package_name = srcpath |> dirname |> basename
+    dataset_name = srcpath |> basename |> str -> split(str, "."; limit=2) |> first
+    return (package_name, dataset_name)
+end

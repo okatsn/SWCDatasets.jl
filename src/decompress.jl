@@ -5,6 +5,11 @@ This function mimics the `dataset` function in `RDatasets.jl`.
 """
 function dataset(package_name::AbstractString, dataset_name::AbstractString)
     target_path = pathconvert(package_name, dataset_name)*".gz"
+    dataset(target_path)
+end
+
+
+function dataset(target_path)
     if !isfile(target_path)
         error("Unable to locate dataset file $path")
     end
@@ -21,12 +26,23 @@ The same as `dataset`, but also save the unzip file.
 """
 function unzip_file(package_name::AbstractString, dataset_name::AbstractString)
     target_path = pathconvert(package_name, dataset_name)*".gz"
+    unzip_file(target_path)
+end
+
+
+function unzip_file(target_path)
     if !isfile(target_path)
         error("Unable to locate dataset file $path")
     end
+    package_name, dataset_name = get_package_dataset_name(target_path)
     file_decomp = pathconvert(dir_to_be_converted, package_name, dataset_name)*".csv"
     mkpath(dirname(file_decomp))
 
+    compressed1 = open(target_path, "r") do io
+        read(io)
+    end
+
+    decompressed1 = transcode(GzipDecompressor, compressed1)
     open(file_decomp, "w") do io
         write(io, decompressed1)
     end
