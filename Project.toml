@@ -1,13 +1,15 @@
 name = "SWCDatasets"
 uuid = "92a3a819-b5fa-4251-b583-c8bfed228d45"
 authors = ["okatsn <okatsn@gmail.com> and contributors"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 
 [compat]
+CSV = "0.10.9"
+DataFrames = "1.4.4"
 julia = "1.6"
 
 [extras]
