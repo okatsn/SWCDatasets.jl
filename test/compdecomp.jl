@@ -1,3 +1,29 @@
+@testset "Source-Target paths" begin
+    using CodecZlib,CSV,DataFrames,RDatasets
+    iris = RDatasets.dataset("datasets", "iris")
+
+    srcdir = SWCDatasets.dir_data("temp")
+    targetdir = SWCDatasets.dir_data()
+    rawdir = SWCDatasets.dir_data("raw")
+
+    mkpath.([srcdir, targetdir, rawdir])
+    srcfile = joinpath(srcdir, "iris.csv")
+    CSV.write(srcfile, iris)
+
+    package_name = "MJ"
+    dataset_name = "IRIS"
+    SD = SWCDatasets.SourceData(srcfile, package_name, dataset_name)
+    show(SD)
+
+    SWCDatasets.compress_save(SD)
+
+    df_decomp2 = SWCDatasets.dataset(SD.zipfile)
+    df_decomp1 = SWCDatasets.unzip_file(SD.zipfile)
+
+    @test isequal(df_decomp1, df_decomp2)
+    @test isfile(SWCDatasets.dir_data(package_name, dataset_name*".gz"))
+end
+
 @testset "Compress and Decompress" begin
     using CodecZlib,CSV,DataFrames,RDatasets
     iris = RDatasets.dataset("datasets", "iris")
@@ -43,6 +69,10 @@
 
     # TODO: test if they are removed
 end
+
+
+
+
 # TODO: test _save_file error
 # TODO: test _unzip
 # TODO: test SWCDatasets.DataFrame
