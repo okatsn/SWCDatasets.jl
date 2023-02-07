@@ -36,6 +36,26 @@ function return_compressed(data::Vector{UInt8})
     transcode(GzipCompressor, data)
 end
 
+
+struct SourceData
+    srcfile::String
+    package_name::String
+    dataset_name::String
+    dstfile::String
+end
+
+function SourceData(srcfile, package_name, dataset_name)
+    dstfile = dir_data(package_name, dataset_name*".gz")
+    SourceData(srcfile, package_name, dataset_name, dstfile)
+end
+
+function SourceData(srcfile)
+    (package_name, dataset_name) = get_package_dataset_name(srcpath)
+    SourceData(srcfile, package_name, dataset_name)
+end
+
+
+
 """
 `compress_save(srcpath, target_path::AbstractString)` use `return_compressed` to generate compressed data and save it to `target_path`.
 """
@@ -58,9 +78,18 @@ function compress_save(srcpath, pathconvert::Function)
     return target_path
 end
 
+"""
+For `compress_save(srcpath)` where `srcpath` is the path to the source file, the `package_name` will be the folder that the file resides, the `dataset_name` will be the name of the data without extension, and the path to the compressed file will be `dir_data(package_name, dataset_name, targetfile)` where target file
+"""
 function compress_save(srcpath)
-    compress_save(srcpath, SWCDatasets.pathconvert)
+    compress_save(SourceData(srcpath))
 end
+
+
+function compress_save(SD::SourceData)
+    compress_save(SD.srcfile, SD.dstfile)
+end
+
 
 # TODO: rename functions
 
