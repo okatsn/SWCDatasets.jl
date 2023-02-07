@@ -20,24 +20,6 @@ dir_data(args...) = joinpath("data", args...)
 
 
 
-
-"""
-`pathconvert(f::Function, package_name, dataset_name)` returns `target_path` **without** extension (e.g., ".csv" or ".csv.gz").
-
-`f` is a `f(args...) = joinpath(..., args)` function.
-
-"""
-function pathconvert(f::Function, package_name, dataset_name)
-    target_path = f(package_name, dataset_name)
-end # TODO: consider delete me and related lines
-
-"""
-`pathconvert(package_name, dataset_name)` is equivalent to `pathconvert(dir_data, package_name, dataset_name)`
-"""
-function pathconvert(package_name, dataset_name)
-    pathconvert(dir_data, package_name, dataset_name)
-end
-
 """
 TODO: Please test me.
 """

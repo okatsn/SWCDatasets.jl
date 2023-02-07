@@ -11,7 +11,7 @@ include("datasets.jl")
 
 include("datadir.jl")
 
-using CodecZlib
+using CodecZlib,Dates
 include("compress.jl")
 
 include("decompress.jl")

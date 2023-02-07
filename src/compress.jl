@@ -41,8 +41,33 @@ struct SourceData
     srcfile::String
     package_name::String
     dataset_name::String
+    title::String
     dstfile::String
+    rows::Int
+    columns::Int
+    description::String
+    timestamps::TimeType
 end
+
+function SourceData(srcfile, package_name, dataset_name, title, dstfile, rows, columns, description)
+    SourceData(srcfile, package_name, dataset_name, title, dstfile, rows, columns, description, today())
+end
+
+function SourceData(srcfile, package_name, dataset_name, title, dstfile, rows, columns)
+    SourceData(srcfile, package_name, dataset_name, title, dstfile, rows, columns, "")
+end
+
+function SourceData(srcfile, package_name, dataset_name, title, dstfile)
+    df = CSV.read(srcfile, DataFrame)
+    (rows, columns) = (nrow(df), ncol(df))
+    SourceData(srcfile, package_name, dataset_name, title, dstfile, rows, columns)
+end
+
+function SourceData(srcfile, package_name, dataset_name, dstfile)
+    title = "Data [$dataset_name] of [$package_name]"
+    SourceData(srcfile, package_name, dataset_name, title, dstfile)
+end
+
 
 function SourceData(srcfile, package_name, dataset_name)
     dstfile = dir_data(package_name, dataset_name*".gz")
@@ -67,22 +92,14 @@ function compress_save(srcpath, target_path::AbstractString)
     end
 end
 
-"""
-`compress_save(srcpath, pathconvert::Function)` where `pathconvert` is a function that converts `srcpath` to `target_path`. Noted that file extension ".gz" will be automatically added for `target_path`.
-"""
-function compress_save(srcpath, pathconvert::Function)
-    package_name, dataset_name = get_package_dataset_name(srcpath)
-    target_path =  pathconvert(package_name, dataset_name)*".gz"
-    compress_save(srcpath, target_path)
-    @info "File saved to $target_path"
-    return target_path
-end
+
 
 """
 For `compress_save(srcpath)` where `srcpath` is the path to the source file, the `package_name` will be the folder that the file resides, the `dataset_name` will be the name of the data without extension, and the path to the compressed file will be `dir_data(package_name, dataset_name, targetfile)` where target file
 """
 function compress_save(srcpath)
     compress_save(SourceData(srcpath))
+    @info "File saved to $target_path"
 end
 
 
@@ -92,16 +109,3 @@ end
 
 
 # TODO: rename functions
-
-
-
-# function pathconvert(srcpath)
-#     filename = basename(srcpath)
-#     srcdir = dirname(srcpath)
-#     target_path = joinpath(srcdir)
-# end
-
-
-# function compress_save(srcpath)
-#     compress_save(srcpath, pathconvert)
-# end

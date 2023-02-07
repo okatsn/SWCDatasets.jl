@@ -16,6 +16,7 @@
     decompressed1 = transcode(CodecZlib.GzipDecompressor, compressed1)
     @test isequal(decompressed1, original)
 
+    # Test compress_save
     target_path = SWCDatasets.compress_save(srcfile)
 
     df_decomp2 = SWCDatasets.dataset(target_path)
@@ -40,6 +41,5 @@
 
     # TODO: test if they are removed
 end
-
-
-# TODO: Test pathconvert
+# TODO: test _save_file error
+# TODO: test _unzip
