@@ -3,8 +3,7 @@
 """
 function datasets()
     if SWCDatasets.__datasets === nothing
-        path = joinpath(dirname(@__FILE__), "..", "data" , "doc", "datasets.csv")
-        global __datasets = DataFrame(CSV.File(path))
+        global __datasets = DataFrame(CSV.File(dataset_table))
     end
     return SWCDatasets.__datasets::DataFrame
 end

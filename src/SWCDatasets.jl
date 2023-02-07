@@ -3,7 +3,7 @@ module SWCDatasets
 # Write your package code here.
 
 global __datasets = nothing
-
+const dataset_table = joinpath(dirname(@__FILE__), "..", "data" , "doc", "datasets.csv")
 
 
 using CSV,DataFrames

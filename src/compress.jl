@@ -42,36 +42,36 @@ struct SourceData
     package_name::String
     dataset_name::String
     title::String
-    dstfile::String
+    zipfile::String
     rows::Int
     columns::Int
     description::String
     timestamps::TimeType
 end
 
-function SourceData(srcfile, package_name, dataset_name, title, dstfile, rows, columns, description)
-    SourceData(srcfile, package_name, dataset_name, title, dstfile, rows, columns, description, today())
+function SourceData(srcfile, package_name, dataset_name, title, zipfile, rows, columns, description)
+    SourceData(srcfile, package_name, dataset_name, title, zipfile, rows, columns, description, today())
 end
 
-function SourceData(srcfile, package_name, dataset_name, title, dstfile, rows, columns)
-    SourceData(srcfile, package_name, dataset_name, title, dstfile, rows, columns, "")
+function SourceData(srcfile, package_name, dataset_name, title, zipfile, rows, columns)
+    SourceData(srcfile, package_name, dataset_name, title, zipfile, rows, columns, "")
 end
 
-function SourceData(srcfile, package_name, dataset_name, title, dstfile)
+function SourceData(srcfile, package_name, dataset_name, title, zipfile)
     df = CSV.read(srcfile, DataFrame)
     (rows, columns) = (nrow(df), ncol(df))
-    SourceData(srcfile, package_name, dataset_name, title, dstfile, rows, columns)
+    SourceData(srcfile, package_name, dataset_name, title, zipfile, rows, columns)
 end
 
-function SourceData(srcfile, package_name, dataset_name, dstfile)
+function SourceData(srcfile, package_name, dataset_name, zipfile)
     title = "Data [$dataset_name] of [$package_name]"
-    SourceData(srcfile, package_name, dataset_name, title, dstfile)
+    SourceData(srcfile, package_name, dataset_name, title, zipfile)
 end
 
 
 function SourceData(srcfile, package_name, dataset_name)
-    dstfile = dir_data(package_name, dataset_name*".gz")
-    SourceData(srcfile, package_name, dataset_name, dstfile)
+    zipfile = dir_data(package_name, dataset_name*".gz")
+    SourceData(srcfile, package_name, dataset_name, zipfile)
 end
 
 function SourceData(srcfile)
@@ -79,17 +79,23 @@ function SourceData(srcfile)
     SourceData(srcfile, package_name, dataset_name)
 end
 
-
+function SWCDatasets.DataFrame(SD::SourceData)
+    return DataFrame(:PackageName  => SD.package_name,
+    :Dataset  => SD.dataset_name,
+    :Title  => SD.title,
+    :Rows  => SD.rows,
+    :Columns  => SD.columns,
+    :Description  => SD.description,
+    :TimeStamp  => SD.timestamps,
+    :RawData  => SD.srcfile,
+    :ZippedData  => SD.zipfile)
+end
 
 """
 `compress_save(srcpath, target_path::AbstractString)` use `return_compressed` to generate compressed data and save it to `target_path`.
 """
 function compress_save(srcpath, target_path::AbstractString)
-    compressed = return_compressed(srcpath)
-    mkpath(dirname(target_path))
-    open(target_path, "w") do io
-        write(io, compressed)
-    end
+
 end
 
 
@@ -104,7 +110,17 @@ end
 
 
 function compress_save(SD::SourceData)
-    compress_save(SD.srcfile, SD.dstfile)
+
+    compressed = return_compressed(SD.srcfile)
+    target_path = SD.zipfile
+    mkpath(dirname(target_path))
+    open(target_path, "w") do io
+        write(io, compressed)
+        @info "Zipped file saved at $target_path"
+    end
+    CSV.write(dataset_table, SWCDatasets.DataFrame(SD); append=true)
+    @info "$(basename(dataset_table)) updated successfully."
+
 end
 
 
