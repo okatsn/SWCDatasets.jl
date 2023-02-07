@@ -3,8 +3,8 @@
 This function mimics the `dataset` function in `RDatasets.jl`.
 
 """
-function dataset(package_name::AbstractString, dataset_name::AbstractString)
-    row = target_row(package_name, dataset_name)
+function dataset(package_name::AbstractString, dataset_name::AbstractString; kwargs...)
+    row = target_row(package_name, dataset_name; kwargs...)
     target_path = row.ZippedData
     dataset(target_path)
 end
@@ -25,8 +25,8 @@ end
 """
 The same as `dataset`, but also save the unzip file.
 """
-function unzip_file(package_name::AbstractString, dataset_name::AbstractString)
-    row = target_row(package_name, dataset_name)
+function unzip_file(package_name::AbstractString, dataset_name::AbstractString; kwargs...)
+    row = target_row(package_name, dataset_name; kwargs...)
     target_path = row.ZippedData
     decompressed1 = _unzip(target_path)
 
