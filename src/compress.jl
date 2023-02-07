@@ -78,21 +78,24 @@ function SourceData(srcfile, package_name, dataset_name, title, zipfile)
     SourceData(srcfile, package_name, dataset_name, title, zipfile, rows, columns)
 end
 
-"""
-If `title` not specified, it will be `"Data [\$dataset_name] of [\$package_name]"`.
-"""
-function SourceData(srcfile, package_name, dataset_name, zipfile)
-    title = "Data [$dataset_name] of [$package_name]"
-    SourceData(srcfile, package_name, dataset_name, title, zipfile)
-end
 
 """
 If `zipfile` not specified, it will be `dir_data(package_name, dataset_name*".gz")`.
 """
-function SourceData(srcfile, package_name, dataset_name)
+function SourceData(srcfile, package_name, dataset_name, title)
     zipfile = dir_data(package_name, dataset_name*".gz")
-    SourceData(srcfile, package_name, dataset_name, zipfile)
+    SourceData(srcfile, package_name, dataset_name, title, zipfile)
 end
+
+
+"""
+If `title` not specified, it will be `"Data [\$dataset_name] of [\$package_name]"`.
+"""
+function SourceData(srcfile, package_name, dataset_name)
+    title = "Data [$dataset_name] of [$package_name]"
+    SourceData(srcfile, package_name, dataset_name, title)
+end
+
 
 """
 If `package_name, dataset_name` not specified, `(package_name, dataset_name) = get_package_dataset_name(srcfile)` is applied.
@@ -121,9 +124,10 @@ end
 
 
 """
-`compress_save(SD::SourceData)` compress the `SD.srcfile`, save the zipped one to `SD.zipfile`, and update the $dataset_table.
+`compress_save(SD::SourceData; move_source = true)` compress the `SD.srcfile`, save the zipped one to `SD.zipfile`, and update the $(dataset_table()).
+By default, the source file will be moved to `dir_raw()`.
 """
-function compress_save(SD::SourceData)
+function compress_save(SD::SourceData; move_source = true)
 
     compressed = return_compressed(SD.srcfile)
     target_path = SD.zipfile
@@ -132,18 +136,21 @@ function compress_save(SD::SourceData)
         write(io, compressed)
         @info "Zipped file saved at $target_path"
     end
-    CSV.write(dataset_table, SWCDatasets.DataFrame(SD); append=true)
-    @info "$(basename(dataset_table)) updated successfully."
+    CSV.write(dataset_table(), SWCDatasets.DataFrame(SD); append=true)
+    @info "$(basename(dataset_table())) updated successfully."
 
+    if move_source
+        mv2dir(SD.srcfile, dir_raw())
+    end
 end
 
 
 """
 `compress_save(srcpath)` is equivalent to `compress_save(SourceData(srcpath))` but returns `SD::SourceData.zipfile` as the path to the `target_file`.
 """
-function compress_save(srcpath)
+function compress_save(srcpath; args...)
     SD = SourceData(srcpath)
-    compress_save(SD)
+    compress_save(SD; args...)
     return SD.zipfile
 end
 

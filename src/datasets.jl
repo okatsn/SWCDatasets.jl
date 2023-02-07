@@ -3,7 +3,7 @@
 """
 function datasets()
     if SWCDatasets.__datasets === nothing
-        global __datasets = DataFrame(CSV.File(dataset_table))
+        global __datasets = DataFrame(CSV.File(dataset_table()))
     end
     return SWCDatasets.__datasets::DataFrame
 end

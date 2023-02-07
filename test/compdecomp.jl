@@ -1,5 +1,21 @@
+using CodecZlib,CSV,DataFrames,RDatasets
+
+dataset_table() = joinpath(dirname(@__FILE__), "..", "data" , "doc", "datasets_for_test.csv")
+
+DataFrame(
+    :PackageName => String[],
+    :Dataset => String[],
+    :Title => String[],
+    :Rows => String[],
+    :Columns => String[],
+    :Description => String[],
+    :TimeStamp => String[],
+    :RawData => String[],
+    :ZippedData => String[],
+) |> df -> CSV.write(dataset_table(), df)
+
 @testset "Source-Target paths" begin
-    using CodecZlib,CSV,DataFrames,RDatasets
+
     iris = RDatasets.dataset("datasets", "iris")
 
     srcdir = SWCDatasets.dir_data("temp")
@@ -15,17 +31,21 @@
     SD = SWCDatasets.SourceData(srcfile, package_name, dataset_name)
     show(SD)
 
-    SWCDatasets.compress_save(SD)
+    SWCDatasets.compress_save(SD) # KEYNOTE: test the main method
 
     df_decomp2 = SWCDatasets.dataset(SD.zipfile)
     df_decomp1 = SWCDatasets.unzip_file(SD.zipfile)
 
     @test isequal(df_decomp1, df_decomp2)
-    @test isfile(SWCDatasets.dir_data(package_name, dataset_name*".gz"))
+
+    @test isfile(SWCDatasets.dir_data(package_name, dataset_name*".gz")) || "Target file not exists or named correctly"
+    @test isfile(joinpath(targetdir, basename(srcfile))) || "Target file not exists or named correctly"
+    @test !isfile(SD.srcfile) || "srcfile should be moved to dir_raw()"
+    @test isfile(SWCDatasets.dir_raw(basename(SD.srcfile))) || "srcfile should be moved to dir_raw()"
+    rm("data"; recursive = true)
 end
 
 @testset "Compress and Decompress" begin
-    using CodecZlib,CSV,DataFrames,RDatasets
     iris = RDatasets.dataset("datasets", "iris")
 
     srcdir = SWCDatasets.dir_data("RDatasets")
@@ -45,7 +65,7 @@ end
     @test isequal(decompressed1, original)
 
     # Test compress_save
-    target_path = SWCDatasets.compress_save(srcfile)
+    target_path = SWCDatasets.compress_save(srcfile) # KEYNOTE: test the alternative method
 
     df_decomp2 = SWCDatasets.dataset(target_path)
     df_decomp1 = SWCDatasets.unzip_file(target_path)
@@ -67,12 +87,5 @@ end
     @test isfile(srcfile)
     @test isfile(target_path)
 
-    # TODO: test if they are removed
+    rm("data"; recursive = true)
 end
-
-
-
-
-# TODO: test _save_file error
-# TODO: test _unzip
-# TODO: test SWCDatasets.DataFrame
