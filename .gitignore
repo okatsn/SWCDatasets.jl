@@ -3,3 +3,5 @@
 *.jl.mem
 /Manifest.toml
 /docs/build/
+/data/doc/datasets_for_test.csv
+/data/raw/

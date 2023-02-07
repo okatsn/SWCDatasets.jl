@@ -165,12 +165,12 @@ end
 
 
 """
-`compress_save(srcpath)` is equivalent to `compress_save(SourceData(srcpath))` but returns `SD::SourceData.zipfile` as the path to the `target_file`.
+`compress_save(srcpath)` is equivalent to `compress_save!(SourceData(srcpath))` but returns `SD::SourceData`.
 """
 function compress_save(srcpath; args...)
     SD = SourceData(srcpath)
     compress_save!(SD; args...)
-    return SD.zipfile
+    return SD
 end
 
 

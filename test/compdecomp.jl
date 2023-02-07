@@ -1,6 +1,6 @@
 using CodecZlib,CSV,DataFrames,RDatasets
 
-dataset_table() = joinpath(dirname(@__FILE__), "..", "data" , "doc", "datasets_for_test.csv")
+SWCDatasets.dataset_table() = joinpath(dirname(@__FILE__), "..", "data" , "doc", "datasets_for_test.csv")
 
 DataFrame(
     :PackageName => String[],
@@ -12,11 +12,11 @@ DataFrame(
     :TimeStamp => String[],
     :RawData => String[],
     :ZippedData => String[],
-) |> df -> CSV.write(dataset_table(), df)
+) |> df -> CSV.write(SWCDatasets.dataset_table(), df)
+
+iris = RDatasets.dataset("datasets", "iris")
 
 @testset "Source-Target paths" begin
-
-    iris = RDatasets.dataset("datasets", "iris")
 
     srcdir = SWCDatasets.dir_data("temp")
     targetdir = SWCDatasets.dir_data()
@@ -29,24 +29,29 @@ DataFrame(
     package_name = "MJ"
     dataset_name = "IRIS"
     SD = SWCDatasets.SourceData(srcfile, package_name, dataset_name)
-    show(SD)
+    show(SD) # also test `show`
 
-    SWCDatasets.compress_save(SD) # KEYNOTE: test the main method
+    SWCDatasets.compress_save!(SD) # KEYNOTE: test the main method
+    @test isfile(SD.zipfile) || "Target file ($(SD.zipfile)) unexported"
 
+    df_decomp3 = SWCDatasets.dataset(SD.package_name, SD.dataset_name; force=true)
     df_decomp2 = SWCDatasets.dataset(SD.zipfile)
-    df_decomp1 = SWCDatasets.unzip_file(SD.zipfile)
+    df_decomp1 = SWCDatasets.unzip_file(SD.package_name, SD.dataset_name; force=true)
 
     @test isequal(df_decomp1, df_decomp2)
+    @test isequal(df_decomp1, df_decomp3)
 
     @test isfile(SWCDatasets.dir_data(package_name, dataset_name*".gz")) || "Target file not exists or named correctly"
-    @test isfile(joinpath(targetdir, basename(srcfile))) || "Target file not exists or named correctly"
-    @test !isfile(SD.srcfile) || "srcfile should be moved to dir_raw()"
+
+    @test !isfile(srcfile) || "srcfile should be moved to dir_raw()"
+    @test isfile(SD.srcfile) || "SD.srcfile should be updated and the file should exists"
     @test isfile(SWCDatasets.dir_raw(basename(SD.srcfile))) || "srcfile should be moved to dir_raw()"
+
     rm("data"; recursive = true)
 end
 
 @testset "Compress and Decompress" begin
-    iris = RDatasets.dataset("datasets", "iris")
+
 
     srcdir = SWCDatasets.dir_data("RDatasets")
     mkpath(srcdir)
@@ -65,7 +70,11 @@ end
     @test isequal(decompressed1, original)
 
     # Test compress_save
-    target_path = SWCDatasets.compress_save(srcfile) # KEYNOTE: test the alternative method
+
+    SD = SWCDatasets.compress_save(srcfile) # KEYNOTE: test the alternative method
+    target_path = SD.zipfile
+
+
 
     df_decomp2 = SWCDatasets.dataset(target_path)
     df_decomp1 = SWCDatasets.unzip_file(target_path)
