@@ -37,7 +37,7 @@ function return_compressed(data::Vector{UInt8})
 end
 
 
-struct SourceData
+mutable struct SourceData
     srcfile::String
     package_name::String
     dataset_name::String
@@ -124,10 +124,10 @@ end
 
 
 """
-`compress_save(SD::SourceData; move_source = true)` compress the `SD.srcfile`, save the zipped one to `SD.zipfile`, and update the $(dataset_table()).
+`compress_save!(SD::SourceData; move_source = true)` compress the `SD.srcfile`, save the zipped one to `SD.zipfile`, and update the $(dataset_table()).
 By default, the source file will be moved to `dir_raw()`.
 """
-function compress_save(SD::SourceData; move_source = true)
+function compress_save!(SD::SourceData; move_source = true)
 
     compressed = return_compressed(SD.srcfile)
     target_path = SD.zipfile
@@ -136,12 +136,14 @@ function compress_save(SD::SourceData; move_source = true)
         write(io, compressed)
         @info "Zipped file saved at $target_path"
     end
-    CSV.write(dataset_table(), SWCDatasets.DataFrame(SD); append=true)
-    @info "$(basename(dataset_table())) updated successfully."
 
     if move_source
         mv2dir(SD.srcfile, dir_raw())
+        SD.srcfile = dir_raw(basename(SD.srcfile))
     end
+
+    CSV.write(dataset_table(), SWCDatasets.DataFrame(SD); append=true)
+    @info "$(basename(dataset_table())) updated successfully."
 end
 
 
@@ -150,7 +152,7 @@ end
 """
 function compress_save(srcpath; args...)
     SD = SourceData(srcpath)
-    compress_save(SD; args...)
+    compress_save!(SD; args...)
     return SD.zipfile
 end
 
