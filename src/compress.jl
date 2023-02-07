@@ -49,33 +49,56 @@ struct SourceData
     timestamps::TimeType
 end
 
+"""
+SourceData(srcfile, package_name, dataset_name, title, zipfile, rows, columns, description, timestamps)
+
+
+`srcfile` is the path to the source file, the `package_name` will be the folder that the file resides, the `dataset_name` will be the name of the data without extension.
+
+
+If `timestamps` not specified, it will be `today()`.
+"""
 function SourceData(srcfile, package_name, dataset_name, title, zipfile, rows, columns, description)
     SourceData(srcfile, package_name, dataset_name, title, zipfile, rows, columns, description, today())
 end
 
+"""
+If `description` not specified, it will be `""`.
+"""
 function SourceData(srcfile, package_name, dataset_name, title, zipfile, rows, columns)
     SourceData(srcfile, package_name, dataset_name, title, zipfile, rows, columns, "")
 end
 
+"""
+If `rows, columns` not specified, `CSV.read(srcfile, DataFrame)` will be applied to get the number of rows/columns.
+"""
 function SourceData(srcfile, package_name, dataset_name, title, zipfile)
     df = CSV.read(srcfile, DataFrame)
     (rows, columns) = (nrow(df), ncol(df))
     SourceData(srcfile, package_name, dataset_name, title, zipfile, rows, columns)
 end
 
+"""
+If `title` not specified, it will be `"Data [\$dataset_name] of [\$package_name]"`.
+"""
 function SourceData(srcfile, package_name, dataset_name, zipfile)
     title = "Data [$dataset_name] of [$package_name]"
     SourceData(srcfile, package_name, dataset_name, title, zipfile)
 end
 
-
+"""
+If `zipfile` not specified, it will be `dir_data(package_name, dataset_name*".gz")`.
+"""
 function SourceData(srcfile, package_name, dataset_name)
     zipfile = dir_data(package_name, dataset_name*".gz")
     SourceData(srcfile, package_name, dataset_name, zipfile)
 end
 
+"""
+If `package_name, dataset_name` not specified, `(package_name, dataset_name) = get_package_dataset_name(srcfile)` is applied.
+"""
 function SourceData(srcfile)
-    (package_name, dataset_name) = get_package_dataset_name(srcpath)
+    (package_name, dataset_name) = get_package_dataset_name(srcfile)
     SourceData(srcfile, package_name, dataset_name)
 end
 
@@ -91,24 +114,10 @@ function SWCDatasets.DataFrame(SD::SourceData)
     :ZippedData  => SD.zipfile)
 end
 
-"""
-`compress_save(srcpath, target_path::AbstractString)` use `return_compressed` to generate compressed data and save it to `target_path`.
-"""
-function compress_save(srcpath, target_path::AbstractString)
-
-end
-
-
 
 """
-For `compress_save(srcpath)` where `srcpath` is the path to the source file, the `package_name` will be the folder that the file resides, the `dataset_name` will be the name of the data without extension, and the path to the compressed file will be `dir_data(package_name, dataset_name, targetfile)` where target file
+`compress_save(SD::SourceData)` compress the `SD.srcfile`, save the zipped one to `SD.zipfile`, and update the $dataset_table.
 """
-function compress_save(srcpath)
-    compress_save(SourceData(srcpath))
-    @info "File saved to $target_path"
-end
-
-
 function compress_save(SD::SourceData)
 
     compressed = return_compressed(SD.srcfile)
@@ -121,6 +130,16 @@ function compress_save(SD::SourceData)
     CSV.write(dataset_table, SWCDatasets.DataFrame(SD); append=true)
     @info "$(basename(dataset_table)) updated successfully."
 
+end
+
+
+"""
+`compress_save(srcpath)` is equivalent to `compress_save(SourceData(srcpath))` but returns `SD::SourceData.zipfile` as the path to the `target_file`.
+"""
+function compress_save(srcpath)
+    SD = SourceData(srcpath)
+    compress_save(SD)
+    return SD.zipfile
 end
 
 

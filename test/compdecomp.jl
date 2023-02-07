@@ -2,7 +2,9 @@
     using CodecZlib,CSV,DataFrames,RDatasets
     iris = RDatasets.dataset("datasets", "iris")
 
-    srcfile = SWCDatasets.dir_to_be_converted("iris.csv")
+    srcdir = SWCDatasets.dir_data("RDatasets")
+    mkpath(srcdir)
+    srcfile = joinpath(srcdir, "iris.csv")
     CSV.write(srcfile, iris)
 
     original = SWCDatasets.load_original(srcfile)
@@ -43,3 +45,4 @@
 end
 # TODO: test _save_file error
 # TODO: test _unzip
+# TODO: test SWCDatasets.DataFrame
