@@ -114,6 +114,11 @@ function SWCDatasets.DataFrame(SD::SourceData)
     :ZippedData  => SD.zipfile)
 end
 
+function SWCDatasets.show(io::IO, SD::SourceData)
+    row = DataFrame(SD) |> eachrow |> only
+    show(io, PrettyTables.pretty_table(DataFrame(:Field => keys(row), :Content => collect(values(row)))))
+end
+
 
 """
 `compress_save(SD::SourceData)` compress the `SD.srcfile`, save the zipped one to `SD.zipfile`, and update the $dataset_table.

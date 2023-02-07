@@ -12,7 +12,10 @@ include("datasets.jl")
 include("datadir.jl")
 
 using CodecZlib,Dates
+import PrettyTables
 include("compress.jl")
+
+
 
 include("decompress.jl")
 end
