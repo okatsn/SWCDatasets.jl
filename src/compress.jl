@@ -138,8 +138,25 @@ function compress_save!(SD::SourceData; move_source = true)
     end
 
     if move_source
-        mv2dir(SD.srcfile, dir_raw())
-        SD.srcfile = dir_raw(basename(SD.srcfile))
+        target_raw = dir_raw(basename(SD.srcfile))
+        if isfile(target_raw)
+            ex = open(target_raw, "r") do io
+                read(io)
+            end
+
+            current = open(SD.srcfile, "r") do io
+                read(io)
+            end
+            @assert isequal(ex, current) "[move_source=$(move_source)] $(target_raw) already exists but it is different from $(SD.srcfile)."
+
+
+            @info "$(target_raw) already exists and it is exactly the same as $(SD.srcfile). Remove the later."
+            rm(SD.srcfile)
+
+        else
+            mv2dir(SD.srcfile, dir_raw())
+        end
+        SD.srcfile = target_raw
     end
 
     CSV.write(dataset_table(), SWCDatasets.DataFrame(SD); append=true)
