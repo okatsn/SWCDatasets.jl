@@ -10,11 +10,22 @@
 
 This is a julia package created using `okatsn`'s preference, and this package is expected to be registered to [okatsn/OkRegistry](https://github.com/okatsn/OkRegistry) for CIs to work properly.
 
+- `/data/raw/` is git-ignored.
 
-More reading
-Pkg's Artifact that manage an external dataset as a package
-- https://pkgdocs.julialang.org/v1/artifacts/
-- a provider for reposit data: https://github.com/sdobber/FA_data
+## Workflow
+### Transcode and save data
+- `load_original` data and `return_compressed` data
+- `SourceData` for the information of the source file
+- `show` and `DataFrame` methods for `SD::SourceData`
+- `compress_save`: Compress file, move it to `dir_raw`, and save.
 
+### Decompress and load data
+- `datasets()` list the available packages and datasets
+- use `dataset` to get the data as a DataFrame; `unzip_file` save the data in csv.
+
+### Update/merge data
+- not determined yet
+- The process of update existing dataset is not determined
+- There are some code in `src/mergesave.jl`, but not `include`d
 
 This package is create on 2023-02-06.
