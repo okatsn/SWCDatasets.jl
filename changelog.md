@@ -4,7 +4,7 @@
 
 - Initiating the project.
 
-## v0.2.0
+## v0.2.1
 
 - Update CIs
 - Columns for the reference table `datasets.csv` is determined
