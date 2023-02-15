@@ -1,6 +1,8 @@
 
 """
 The path to the index table for datasets in `SWCDatasets`.
+If SWCDatasets is added using `pkg> dev SWCDatasets` in other project/environment, `dataset_table()` returns "~/.julia/dev/SWCDatasets/src/../data/doc/datasets.csv".
+
 """
 dataset_table() = joinpath(dirname(@__FILE__), "..", "data" , "doc", "datasets.csv")
 

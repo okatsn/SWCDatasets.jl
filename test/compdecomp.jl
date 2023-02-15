@@ -31,7 +31,7 @@ iris = RDatasets.dataset("datasets", "iris")
     SD = SWCDatasets.SourceData(srcfile, package_name, dataset_name)
     show(SD) # also test `show`
 
-    SWCDatasets.compress_save!(SD) # KEYNOTE: test the main method
+    SWCDatasets.compress_save!(SD) ##KEYNOTE: test the main method
     @test isfile(SD.zipfile) || "Target file ($(SD.zipfile)) unexported"
 
     df_decomp3 = SWCDatasets.dataset(SD.package_name, SD.dataset_name; force=true)
@@ -70,15 +70,15 @@ end
     @test isequal(decompressed1, original)
 
     # Test compress_save
-
-    SD = SWCDatasets.compress_save(srcfile) # KEYNOTE: test the alternative method
+    SD = SWCDatasets.compress_save(srcfile; move_source=true) # KEYNOTE: test the alternative method
     target_path = SD.zipfile
 
 
 
     df_decomp2 = SWCDatasets.dataset(target_path)
     df_decomp1 = SWCDatasets.unzip_file(target_path)
-    df_decomp0 = CSV.read(srcfile, DataFrame)
+    rm(basename(srcfile)) # By default iris.csv is uzipped to pwd
+    df_decomp0 = CSV.read(SD.srcfile, DataFrame)
 
 
     @test isequal(df_decomp1, df_decomp0)
@@ -93,7 +93,8 @@ end
     @info "`srcfile`: $srcfile"
     @info "`target_path`: $target_path"
     @info "Test if the two files exists:"
-    @test isfile(srcfile)
+    @test !isfile(srcfile) # should be moved
+    @test isfile(SD.srcfile) # to here!
     @test isfile(target_path)
 
     rm("data"; recursive = true)

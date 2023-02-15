@@ -125,7 +125,7 @@ end
 
 """
 `compress_save!(SD::SourceData; move_source = true)` compress the `SD.srcfile`, save the zipped one to `SD.zipfile`, and update the $(dataset_table()).
-By default, the source file will be moved to `dir_raw()`.
+By default, `move_source = true` that the source file will be moved to `dir_raw()`.
 """
 function compress_save!(SD::SourceData; move_source = true)
 
@@ -154,7 +154,8 @@ function compress_save!(SD::SourceData; move_source = true)
             rm(SD.srcfile)
 
         else
-            mv2dir(SD.srcfile, dir_raw())
+            OkFiles.mkdirway(target_raw) # mkpath of dir_raw() in case it doesn't exists
+            mv(SD.srcfile, target_raw)
         end
         SD.srcfile = target_raw
     end
@@ -166,6 +167,8 @@ end
 
 """
 `compress_save(srcpath)` is equivalent to `compress_save!(SourceData(srcpath))` but returns `SD::SourceData`.
+
+`compress_save` takes the same keyword arguments as `compress_save!`.
 """
 function compress_save(srcpath; args...)
     SD = SourceData(srcpath)
