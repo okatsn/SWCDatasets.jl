@@ -6,13 +6,14 @@ This function mimics the `dataset` function in `RDatasets.jl`.
 function dataset(package_name::AbstractString, dataset_name::AbstractString; kwargs...)
     row = target_row(package_name, dataset_name; kwargs...)
     target_path = row.ZippedData
+    # FIXME: target_path should be fixed at SWCDatasets
     dataset(target_path)
 end
 
 
 function dataset(target_path)
     if !isfile(target_path)
-        error("Unable to locate dataset file $path")
+        error("Unable to locate dataset file $target_path")
     end
 
     df_decomp2 = open(target_path, "r") do io
@@ -28,6 +29,7 @@ The same as `dataset`, but also save the unzip file.
 function unzip_file(package_name::AbstractString, dataset_name::AbstractString; kwargs...)
     row = target_row(package_name, dataset_name; kwargs...)
     target_path = row.ZippedData
+    # FIXME: target_path
     decompressed1 = _unzip(target_path)
 
     file_decomp = row.RawData
@@ -38,6 +40,7 @@ end
 
 function unzip_file(target_path)
     decompressed1 = _unzip(target_path)
+    # FIXME: target_path
     filename = split(basename(target_path),"."; limit=2) |> first
     file_decomp = filename*".csv"
     _save_file(file_decomp, decompressed1)
