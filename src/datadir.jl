@@ -21,7 +21,18 @@ dir_data(args...) = joinpath("data", args...)
 
 
 """
-TODO: Please test me.
+Given path to the source file, `get_package_dataset_name(srcpath)` derive package name and dataset name from the `srcpath`.
+
+# Example
+```jldoctest
+srcpath = joinpath("Whatever", "RDatasets", "iris.csv")
+SWCDatasets.get_package_dataset_name(srcpath)
+
+# output
+
+("RDatasets", "iris")
+```
+
 """
 function get_package_dataset_name(srcpath)
     package_name = srcpath |> dirname |> basename
