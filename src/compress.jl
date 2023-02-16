@@ -38,14 +38,14 @@ end
 
 
 mutable struct SourceData
-    srcfile::String
+    srcfile::Union{Missing,String}
     package_name::String
     dataset_name::String
-    title::String
+    title::Union{Missing,String}
     zipfile::String
     rows::Int
     columns::Int
-    description::String
+    description::Union{Missing,String}
     timestamps::TimeType
 end
 
@@ -115,6 +115,36 @@ function SWCDatasets.DataFrame(SD::SourceData)
     :TimeStamp  => SD.timestamps,
     :RawData  => SD.srcfile,
     :ZippedData  => SD.zipfile)
+end
+
+"""
+`SourceData(row::DataFrameRow)` returns
+```julia
+SourceData(
+    abspath(row.RawData),    # srcfile::Union{Missing,String}
+    row.PackageName,         # package_name::String
+    row.Dataset,             # dataset_name::String
+    row.Title,               # title::Union{Missing,String}
+    abspath(row.ZippedData), # zipfile::String
+    row.Rows,                # rows::Int
+    row.Columns,             # columns::Int
+    row.Description,         # description::Union{Missing,String}
+    row.TimeStamp,           # timestamps::TimeType
+    )
+```
+"""
+function SourceData(row::DataFrameRow)
+    SourceData(
+        abspath(row.RawData),    # srcfile::Union{Missing,String}
+        row.PackageName,         # package_name::String
+        row.Dataset,             # dataset_name::String
+        row.Title,               # title::Union{Missing,String}
+        abspath(row.ZippedData), # zipfile::String
+        row.Rows,                # rows::Int
+        row.Columns,             # columns::Int
+        row.Description,         # description::Union{Missing,String}
+        row.TimeStamp,           # timestamps::TimeType
+        )
 end
 
 function SWCDatasets.show(io::IO, SD::SourceData)

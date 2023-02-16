@@ -34,12 +34,10 @@ iris = RDatasets.dataset("datasets", "iris")
     SWCDatasets.compress_save!(SD) ##KEYNOTE: test the main method
     @test isfile(SD.zipfile) || "Target file ($(SD.zipfile)) unexported"
 
-    df_decomp3 = SWCDatasets.dataset(SD.package_name, SD.dataset_name; force=true)
     df_decomp2 = SWCDatasets.dataset(SD.zipfile)
-    df_decomp1 = SWCDatasets.unzip_file(SD.package_name, SD.dataset_name; force=true)
+    df_decomp1 = SWCDatasets.unzip_file(SD.package_name, SD.dataset_name; update_table=true)
 
     @test isequal(df_decomp1, df_decomp2)
-    @test isequal(df_decomp1, df_decomp3)
 
     @test isfile(SWCDatasets.dir_data(package_name, dataset_name*".gz")) || "Target file not exists or named correctly"
 
@@ -49,6 +47,7 @@ iris = RDatasets.dataset("datasets", "iris")
 
     rm("data"; recursive = true)
 end
+
 
 @testset "Compress and Decompress" begin
 

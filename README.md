@@ -12,6 +12,31 @@ This is a julia package created using `okatsn`'s preference, and this package is
 
 - `/data/raw/` is git-ignored.
 
+## Scope
+Functions have to be applied under the correct scope: 
+### `SWCDatasets`
+In this scope, we add new or update existing datasets, and upgrade the version number and release it.
+For these kind of purposes, use 
+- `load_original` data and `return_compressed` data
+- Create a `SourceData` object
+- `compress_save, compress_save!` to compress original `.csv` file to `.gz` file.
+- we can `unzip_file(target_path)` to current directory.
+- `SourceData(...)` save the information of source and compressed data as relative paths.
+
+Under this scope, `activate .` the project of `SWCDatasets`, and use relative paths to locate files.
+
+
+### Your working directory
+In this scope, we load data from `SWCDatasets`.
+In these cases, we:
+- use `dataset` to load the data as `DataFrame`.
+- `unzip_file(package_name, dataset_name)` stored in the repo of `SWCDatasets` to the `dir_raw(...)` of the current working directory.
+- `SourceData(row::DataFrameRow)` converts the relative paths in the `row` to absolute paths.
+
+
+Under this scope, use absolute paths (`abspath(...)`) to locate files in `SWCDatasets`.
+
+
 ## Workflow
 ### Transcode and save data
 - `load_original` data and `return_compressed` data
