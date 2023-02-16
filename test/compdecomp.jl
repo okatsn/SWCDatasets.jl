@@ -1,6 +1,8 @@
-using CodecZlib,CSV,DataFrames,RDatasets
+using CodecZlib,CSV,DataFrames,RDatasets,Dates
 
 SWCDatasets.dataset_table() = "datasets_for_test.csv"
+
+SWCDatasets.today() = Date(2023,2,15) # To make the content in datasets_for_test.csv unchanged after test.
 
 DataFrame(
     :PackageName => String[],
@@ -35,7 +37,7 @@ iris = RDatasets.dataset("datasets", "iris")
     @test isfile(SD.zipfile) || "Target file ($(SD.zipfile)) unexported"
 
     df_decomp2 = SWCDatasets.dataset(SD.zipfile)
-    df_decomp1 = SWCDatasets.unzip_file(SD.package_name, SD.dataset_name; update_table=true)
+    df_decomp1 = SWCDatasets.unzip_file(SD.zipfile)
 
     @test isequal(df_decomp1, df_decomp2)
 
