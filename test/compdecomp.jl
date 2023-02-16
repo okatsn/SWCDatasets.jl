@@ -47,6 +47,7 @@ iris = RDatasets.dataset("datasets", "iris")
     @test isfile(SD.srcfile) || "SD.srcfile should be updated and the file should exists"
     @test isfile(SWCDatasets.dir_raw(basename(SD.srcfile))) || "srcfile should be moved to dir_raw()"
 
+    rm("IRIS.csv")
     rm("data"; recursive = true)
 end
 
