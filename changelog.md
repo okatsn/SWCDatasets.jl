@@ -8,6 +8,7 @@
 
 - Update CIs
 - Columns for the reference table `datasets.csv` is determined
+- Not worked yet due to locating the data in `SWCDatasets`
 
 ### New features:
 Transcode and save data
@@ -26,3 +27,9 @@ Update/merge data
 
 ### Tests
 All functions mentioned above are tested.
+
+## v0.2.4
+- The problem of locating data in `SWCDatasets` in an alternative working directory fixed
+- rename keyword argument `force` to `update_table` in `datasets`
+- Remove some tests since now abs. paths are applied. See also README.md
+- New method `SourceData(row::DataFrameRow)`; new `const DATASET_ABS_DIR`

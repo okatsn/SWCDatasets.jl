@@ -1,6 +1,8 @@
-using CodecZlib,CSV,DataFrames,RDatasets
+using CodecZlib,CSV,DataFrames,RDatasets,Dates
 
 SWCDatasets.dataset_table() = "datasets_for_test.csv"
+
+SWCDatasets.today() = Date(2023,2,15) # To make the content in datasets_for_test.csv unchanged after test.
 
 DataFrame(
     :PackageName => String[],
@@ -34,12 +36,10 @@ iris = RDatasets.dataset("datasets", "iris")
     SWCDatasets.compress_save!(SD) ##KEYNOTE: test the main method
     @test isfile(SD.zipfile) || "Target file ($(SD.zipfile)) unexported"
 
-    df_decomp3 = SWCDatasets.dataset(SD.package_name, SD.dataset_name; force=true)
     df_decomp2 = SWCDatasets.dataset(SD.zipfile)
-    df_decomp1 = SWCDatasets.unzip_file(SD.package_name, SD.dataset_name; force=true)
+    df_decomp1 = SWCDatasets.unzip_file(SD.zipfile)
 
     @test isequal(df_decomp1, df_decomp2)
-    @test isequal(df_decomp1, df_decomp3)
 
     @test isfile(SWCDatasets.dir_data(package_name, dataset_name*".gz")) || "Target file not exists or named correctly"
 
@@ -47,8 +47,10 @@ iris = RDatasets.dataset("datasets", "iris")
     @test isfile(SD.srcfile) || "SD.srcfile should be updated and the file should exists"
     @test isfile(SWCDatasets.dir_raw(basename(SD.srcfile))) || "srcfile should be moved to dir_raw()"
 
+    rm("IRIS.csv")
     rm("data"; recursive = true)
 end
+
 
 @testset "Compress and Decompress" begin
 
