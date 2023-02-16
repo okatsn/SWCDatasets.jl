@@ -1,2 +1,2 @@
 PackageName,Dataset,Title,Rows,Columns,Description,TimeStamp,RawData,ZippedData
-NCUWiseLab,ARI_G2F820,Data [ARI_G2F820] of [NCUWiseLAB],5832,19,,2023-02-15,data/raw/ARI_G2F820_202201-08_20230206.csv,data/NCUWiseLAB/ARI_G2F820.gz
+NCUWiseLab,ARI_G2F820,Data [ARI_G2F820] of [NCUWiseLab],5832,19,,2023-02-15,data/raw/ARI_G2F820_202201-08_20230206.csv,data/NCUWiseLab/ARI_G2F820.gz
