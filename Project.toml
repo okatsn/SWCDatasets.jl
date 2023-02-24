@@ -1,7 +1,7 @@
 name = "SWCDatasets"
 uuid = "92a3a819-b5fa-4251-b583-c8bfed228d45"
 authors = ["okatsn <okatsn@gmail.com> and contributors"]
-version = "0.2.4"
+version = "0.2.5"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
@@ -15,9 +15,9 @@ PrettyTables = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
 [compat]
 CSV = "0.10.9"
 CodecZlib = "0.7.1"
-DataFrames = "1.4.4"
+DataFrames = "1.5"
 GZip = "0.5.1"
-OkFiles = "0.4.0"
+OkFiles = "0.4.1"
 PrettyTables = "2.2.2"
 julia = "1.6"
 
