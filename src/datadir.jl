@@ -25,6 +25,7 @@ Given path to the source file, `get_package_dataset_name(srcpath)` derive packag
 
 # Example
 ```jldoctest
+using SWCDatasets
 srcpath = joinpath("Whatever", "RDatasets", "iris.csv")
 SWCDatasets.get_package_dataset_name(srcpath)
 
