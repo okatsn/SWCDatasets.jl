@@ -33,3 +33,9 @@ All functions mentioned above are tested.
 - rename keyword argument `force` to `update_table` in `datasets`
 - Remove some tests since now abs. paths are applied. See also README.md
 - New method `SourceData(row::DataFrameRow)`; new `const DATASET_ABS_DIR`
+
+## v0.2.7
+- Add `Huanshan2018-2019`
+- Add `Jiufenershan2018-2019`
+- Add `Dacuken2014-2015`
+- Add test for the latest dataset with `TWAISWCF`'s default preprocessing.
