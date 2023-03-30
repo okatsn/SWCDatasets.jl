@@ -1,21 +1,11 @@
 module SWCDatasets
 
-# Write your package code here.
+using SmallDatasetMaker # (required) See also `SmallDatasetMaker.datasets`.
+function SWCDatasets.dataset(package_name, dataset_name)
+    SmallDatasetMaker.dataset(SWCDatasets,package_name, dataset_name)
+end # (optional)
 
-global __datasets = nothing
+SWCDatasets.datasets() = SmallDatasetMaker.datasets(SWCDatasets) # (optional)
+# so that you can use `SWCDatasets.datasets()` to list all availabe `package/dataest`s in `SWCDatasets`
 
-using OkFiles
-
-using CSV,DataFrames
-include("datasets.jl")
-
-include("datadir.jl")
-
-using CodecZlib,Dates
-import PrettyTables
-include("compress.jl")
-export SourceData, compress_save, compress_save!
-
-
-include("decompress.jl")
 end
