@@ -8,6 +8,7 @@ end # (optional)
 SWCDatasets.datasets() = SmallDatasetMaker.datasets(SWCDatasets) # (optional)
 # so that you can use `SWCDatasets.datasets()` to list all availabe `package/dataest`s in `SWCDatasets`
 
-dir_raw(args...) = SmallDatasetMaker.abspath(SWCDatasets, "data", "raw", args...) # just for the convenience in dataset making
+include("shortcuts.jl")
+
 
 end
