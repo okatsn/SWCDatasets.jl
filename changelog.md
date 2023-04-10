@@ -36,6 +36,4 @@ All functions mentioned above are tested.
 
 ## v0.2.7
 - Add `Huanshan2018-2019`
-- Add `Jiufenershan2018-2019`
-- Add `Dacuken2014-2015`
 - Add test for the latest dataset with `TWAISWCF`'s default preprocessing.

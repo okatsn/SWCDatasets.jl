@@ -1,7 +1,7 @@
 name = "SWCDatasets"
 uuid = "92a3a819-b5fa-4251-b583-c8bfed228d45"
 authors = ["okatsn <okatsn@gmail.com> and contributors"]
-version = "0.2.6"
+version = "0.2.7"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
@@ -22,8 +22,8 @@ CompatHelperLocal = "5224ae11-6099-4aaa-941d-3aab004bd678"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 RDatasets = "ce6b1742-4840-55fa-b093-852dadbb1d8b"
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 TWAISWCF = "d9c8f7ca-66b2-433f-ab74-835b361b75b3"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
 test = ["Test", "Documenter", "CompatHelperLocal", "RDatasets", "Pkg", "TWAISWCF"]
