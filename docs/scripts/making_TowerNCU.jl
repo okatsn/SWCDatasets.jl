@@ -23,4 +23,17 @@ for df in dfs
 end
 
 # ## Dataoverview
-using CairoMakie, SWCForecastBase
+using CairoMakie, SWCForecastBase, Dates
+ismln(x) = islnan(x) || ismissing(x)
+DR = DataRatio(df_all, Month(1), islnan)
+f = Figure(;resolution=(1000,850))
+ax = Axis(f[1, 1]; xticklabelrotation = 0.3π)
+hmap = heatmap!(ax, DR; colormap = "diverging_rainbow_bgymr_45_85_c67_n256")
+Colorbar(f[1, 2], hmap, label = "missing data rate")
+display(f)
+
+# ## Save the dataset
+dir_temp = SWCDatasets.dir_raw("NCUWiseLab", "TowerNCU_combined.csv")
+CSV.write(dir_temp, df_all)
+SD = SourceData(dir_temp)
+compress_save!(SWCDatasets, SD)
