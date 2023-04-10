@@ -37,3 +37,7 @@ All functions mentioned above are tested.
 ## v0.2.7
 - Add `Huanshan2018-2019`
 - Add test for the latest dataset with `TWAISWCF`'s default preprocessing.
+
+## v0.2.8
+- Add `TowerNCU_combined`
+- Documentation

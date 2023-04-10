@@ -1,7 +1,7 @@
 name = "SWCDatasets"
 uuid = "92a3a819-b5fa-4251-b583-c8bfed228d45"
 authors = ["okatsn <okatsn@gmail.com> and contributors"]
-version = "0.2.7"
+version = "0.2.8"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
