@@ -16,4 +16,11 @@ select!.(dfs, [Not(Cols(r"soil_water_content_\D+"))]) # Delete e.g., soil_water_
 select!.(dfs, [Not(Cols(r"soil_water_content_\d+\_"))]) # Delete e.g., soil_water_content_2...
 dft = difftables(dfs...)
 
-# ## Outer join the tables
+# ## Concatenate tables
+df_all = DataFrame()
+for df in dfs
+    append!(df_all, df; cols = :union)
+end
+
+# ## Dataoverview
+using CairoMakie, SWCForecastBase
