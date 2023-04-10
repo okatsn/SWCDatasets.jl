@@ -1,4 +1,4 @@
-# Making of the dataset `TowerNCU_combined`
+### Making of the dataset `TowerNCU_combined`
 
 ````julia
 using DataFrames
@@ -6,7 +6,7 @@ using CSV
 using Revise, SmallDatasetMaker, SWCDatasets, OkFiles
 ````
 
-## Load the tables
+#### Load the tables
 
 ````julia
 fpaths = filelistall(r"TowerNCU_Li", SWCDatasets.dir_raw())
@@ -21,7 +21,7 @@ basename.(fpaths)
  "TowerNCU_Li-Data2020_0801.csv"
 ````
 
-## Table differences ignoring `soil_water_`
+#### Table differences ignoring `soil_water_`
 
 ````julia
 dft = difftables(dfs...; ignoring = Cols(r"soil_water_"))
@@ -37,7 +37,7 @@ dft = difftables(dfs...; ignoring = Cols(r"soil_water_"))
    3 │ 52704     34  [:solar_radiation]  [:short_wave_down, :evap_level]
 ````
 
-## Remove extra soil water contents
+#### Remove extra soil water contents
 
 ````julia
 select!.(dfs, [Not(Cols(r"soil_water_content_\D+"))]) # Delete e.g., soil_water_content_#2...
@@ -55,7 +55,7 @@ dft = difftables(dfs...)
    3 │ 52704     44  [:solar_radiation]  [:short_wave_down, :evap_level]
 ````
 
-## Concatenate tables
+#### Concatenate tables
 
 ````julia
 df_all = DataFrame()
@@ -64,7 +64,7 @@ for df in dfs
 end
 ````
 
-## Dataoverview
+#### Dataoverview
 
 ````julia
 using CairoMakie, SWCForecastBase, Dates
@@ -78,7 +78,7 @@ f
 ````
 ![](making_TowerNCU-12.png)
 
-## Save the dataset
+#### Save the dataset
 ```
 dir_temp = SWCDatasets.dir_raw("NCUWiseLab", "TowerNCU_combined.csv")
 CSV.write(dir_temp, df_all)
@@ -86,14 +86,14 @@ SD = SourceData(dir_temp)
 compress_save!(SWCDatasets, SD)
 ```
 
-## (Literate)
+#### (Literate)
 
 
 ````
 "TowerNCU"
 ````
 
-Literate.markdown(SWCDatasets.dir_docs("scripts", scriptfile), SWCDatasets.dir_docs(outputfoldername); config = Dict("execute" => true), documenter=false)
+Literate.markdown(SWCDatasets.dir_docs("scripts", scriptfile), SWCDatasets.dir_docs("src", outputfoldername); config = Dict("execute" => true), documenter=false)
 
 ---
 

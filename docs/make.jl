@@ -17,9 +17,15 @@ makedocs(;
         assets=String[],
     ),
     pages=[
-        "Home" => "index.md",
-        "Dataset" => [
-            "TowerNCU" => "TowerNCU/making_TowerNCU.md"
+        "Home" => [
+            "Index" => "index.md",
+            "Available datasets" => "list_all.md",
+        ],
+        "Datasets" => [
+            "TowerNCU" => "TowerNCU_display.md",
+        ],
+        "Making of the Datasets" => [
+            "TowerNCU" => "TowerNCU/making_TowerNCU.md",
         ]
     ],
 )
