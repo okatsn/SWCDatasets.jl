@@ -1,4 +1,6 @@
+
 using SWCDatasets
+using CairoMakie, SWCForecastBase, Dates
 using Documenter
 
 DocMeta.setdocmeta!(SWCDatasets, :DocTestSetup, :(using SWCDatasets); recursive=true)
@@ -16,6 +18,9 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
+        "Dataset" => [
+            "TowerNCU" => "TowerNCU/making_TowerNCU.md"
+        ]
     ],
 )
 
